@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "花生返图",
+    "slug": "flower-return",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "flowerreturn",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "用于拍摄订单实拍返图",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSAllowsLocalNetworking": true
+        },
+        "NSLocalNetworkUsageDescription": "连接店内花生工作台，用于订单返图"
+      },
+      "bundleIdentifier": "com.huashneg.flowerreturn",
+      "buildNumber": "1"
+    },
+    "android": {
+      "permissions": [
+        "CAMERA",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      ],
+      "package": "com.huashneg.flowerreturn",
+      "versionCode": 1
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-secure-store",
+      "expo-status-bar",
+      "expo-audio",
+      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          },
+          "ios": {
+            "deploymentTarget": "16.4"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6565242f-051c-44e7-92b0-91682f18922d"
+      }
+    },
+    "owner": "zaomengzhuyi"
+  }
+}

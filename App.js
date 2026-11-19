@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Image, Modal, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Image, Modal, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as SecureStore from 'expo-secure-store';
 import { useAudioPlayer } from 'expo-audio';
@@ -404,7 +404,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: '#f3f6f3' },
+  page: { flex: 1, backgroundColor: '#f3f6f3', paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f3f6f3' },
   pairWrap: { padding: 28, paddingTop: 70 },
   logo: { fontSize: 30, fontWeight: '800', color: '#2f4430', letterSpacing: 1 },
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
   goodsPlaceholder: { width: 58, height: 58, borderRadius: 7, backgroundColor: '#eef3ef', alignItems: 'center', justifyContent: 'center' },
   goodsText: { flex: 1, marginLeft: 10 },
   goodsSpec: { color: '#87958b', fontSize: 12, marginTop: 4 },
-  scanPage: { flex: 1, backgroundColor: '#000' },
+  scanPage: { flex: 1, backgroundColor: '#000', paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0 },
   scanTopBar: { height: 58, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#000' },
   scanTopButton: { minWidth: 62, paddingVertical: 8 },
   scanTopText: { color: '#fff', fontSize: 15 },
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
   scanTip: { color: '#fff', fontSize: 15, fontWeight: '600' },
   scanSubTip: { color: '#93a39a', fontSize: 12, marginTop: 8 },
   cameraError: { color: '#ff8b75', fontSize: 12, textAlign: 'center', paddingHorizontal: 12, marginTop: 6 },
-  cameraPage: { flex: 1, backgroundColor: '#000' },
+  cameraPage: { flex: 1, backgroundColor: '#000', paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0 },
   cameraTopBar: { height: 58, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#000' },
   cameraTopButton: { minWidth: 64, paddingVertical: 8 },
   cameraTopText: { color: '#fff', fontSize: 15 },

@@ -41,6 +41,7 @@ jobs:
 
       - name: Build unsigned app
         run: |
+          set -o pipefail
           WORKSPACE="${{ steps.project.outputs.workspace }}"
           SCHEME="${{ steps.project.outputs.scheme }}"
           xcodebuild \
@@ -53,7 +54,23 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            build
+            build 2>&1 | tee build.log
+
+      - name: Show build errors
+        if: always()
+        run: |
+          if [ -f build.log ]; then
+            echo "## Xcode errors" >> "$GITHUB_STEP_SUMMARY"
+            grep -n -i -E 'error:|failed|fatal error' build.log | tail -40 >> "$GITHUB_STEP_SUMMARY" || true
+          fi
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcode-build-log
+          path: build.log
+          if-no-files-found: ignore
 
       - name: Package IPA
         run: |

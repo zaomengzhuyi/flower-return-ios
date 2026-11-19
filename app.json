@@ -29,7 +29,11 @@
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
       "package": "com.huashneg.flowerreturn",
-      "versionCode": 1
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1F3A2D"
+      }
     },
     "plugins": [
       "expo-camera",
@@ -54,6 +58,7 @@
         "projectId": "6565242f-051c-44e7-92b0-91682f18922d"
       }
     },
-    "owner": "zaomengzhuyi"
+    "owner": "zaomengzhuyi",
+    "icon": "./assets/icon.png"
   }
 }

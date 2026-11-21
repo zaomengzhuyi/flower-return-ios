@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Image, Modal, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, Alert, Animated, FlatList, Image, Modal, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as SecureStore from 'expo-secure-store';
 import { useAudioPlayer } from 'expo-audio';
@@ -59,6 +59,9 @@ export default function App() {
   const failPlayer = useAudioPlayer(require('./assets/fail.wav'));
   const [previewIndex, setPreviewIndex] = useState(0);
   const { width: screenWidth } = useWindowDimensions();
+  const scanFrameSize = Math.min(screenWidth * 0.72, 300);
+  const scanLineAnim = useRef(new Animated.Value(0)).current;
+  const scanLineTranslate = scanLineAnim.interpolate({ inputRange: [0, 1], outputRange: [0, Math.max(0, scanFrameSize - 4)] });
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState('back');
   const [flash, setFlash] = useState('off');
@@ -248,15 +251,17 @@ export default function App() {
       <SafeAreaView style={styles.scanPage}>
         <View style={styles.scanTopBar}>
           <Pressable onPress={() => setCameraOpen(false)} style={styles.scanTopButton}><Text style={styles.scanTopText}>‹ 取消</Text></Pressable>
-          <Text style={styles.scanTopTitle}>扫描订单条形码</Text>
+          <Text style={styles.scanTopTitle}>扫描订单二维码</Text>
           <Pressable onPress={() => setFlash((value) => (value === 'on' ? 'off' : 'on'))} style={styles.scanTopButton}><Text style={styles.scanTopText}>{flash === 'on' ? '灯开' : '灯关'}</Text></Pressable>
         </View>
         <View style={styles.scanStage}>
-          <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back" flash={flash} onBarcodeScanned={onBarcodeScanned} barcodeScannerSettings={{ barcodeTypes: ['code128', 'code39', 'ean13'] }} />
-          <View pointerEvents="none" style={styles.scanFrame} />
+          <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back" flash={flash} onBarcodeScanned={onBarcodeScanned} barcodeScannerSettings={{ barcodeTypes: ['qr', 'code128', 'code39', 'ean13'] }} />
+          <View pointerEvents="none" style={[styles.scanFrame, { width: scanFrameSize, height: scanFrameSize, left: (screenWidth - scanFrameSize) / 2 }]}>
+            <Animated.View style={[styles.scanLine, { transform: [{ translateY: scanLineTranslate }] }]} />
+          </View>
         </View>
         <View style={styles.scanFooter}>
-          <Text style={styles.scanTip}>{scanBusy ? '正在查询订单…' : '把标签上的条形码放入框内'}</Text>
+          <Text style={styles.scanTip}>{scanBusy ? '正在查询订单…' : '把标签上的二维码放入框内'}</Text>
           <Text style={styles.scanSubTip}>扫描成功后会自动进入订单详情</Text>
         </View>
       </SafeAreaView>
@@ -396,7 +401,7 @@ export default function App() {
           <Text style={styles.scanCircleTitle}>扫描</Text>
           <Text style={styles.scanCircleSub}>订单标签</Text>
         </Pressable>
-        <Text style={styles.scanHint}>点击按钮，对准标签条形码</Text>
+        <Text style={styles.scanHint}>点击按钮，对准标签二维码</Text>
         {scanHint ? <Text style={styles.scanHint}>{scanHint}</Text> : null}
       </View>
     </SafeAreaView>
@@ -470,7 +475,8 @@ const styles = StyleSheet.create({
   scanTopText: { color: '#fff', fontSize: 15 },
   scanTopTitle: { color: '#fff', fontSize: 16, fontWeight: '700' },
   scanStage: { flex: 1, backgroundColor: '#000', overflow: 'hidden' },
-  scanFrame: { position: 'absolute', left: '12%', right: '12%', top: '34%', height: 160, borderWidth: 2, borderColor: '#d6ef8c', borderRadius: 10 },
+  scanFrame: { position: 'absolute', top: '28%', borderWidth: 2, borderColor: '#d6ef8c', borderRadius: 10, overflow: 'hidden' },
+  scanLine: { position: 'absolute', left: 8, right: 8, top: 0, height: 2, backgroundColor: '#d6ef8c', shadowColor: '#d6ef8c', shadowOpacity: 0.9, shadowRadius: 5 },
   scanFooter: { minHeight: 110, alignItems: 'center', justifyContent: 'center', backgroundColor: '#000' },
   scanTip: { color: '#fff', fontSize: 15, fontWeight: '600' },
   scanSubTip: { color: '#93a39a', fontSize: 12, marginTop: 8 },
